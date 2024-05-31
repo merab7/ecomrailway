@@ -1,1 +1,1 @@
-web: gecom.wsgi:application
+web: gecom.wsgi:application --log-file -
