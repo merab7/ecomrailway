@@ -17,9 +17,9 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.0", "mtecom.up.railway.app"]
+ALLOWED_HOSTS = ['localhost', '127.0.0.0', 'mtecom.up.railway.app']
 
-CSRF_TRUSTED_ORIGINS = ['HTTPS://mtecom.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://mtecom.up.railway.app']
 
 # Application definition
 
