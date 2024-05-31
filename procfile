@@ -1,1 +1,1 @@
-web: gunicorn gecom.wsgi
+web: gunicorn gecom.wsgi:application
