@@ -17,8 +17,9 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.0", "mtecom.up.railway.app"]
 
+CSRF_TRUSTED_ORIGINS = ['HTTPS://mtecom.up.railway.app']
 
 # Application definition
 
@@ -85,6 +86,11 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+POSTGRES_LOCALLY=False
+if env.bool('PRODUCTION') or env.bool('POSTGRES_LOCALLY'):
+    DATABASES['default']= dj_database_url.parse(env('DATABASE_URL'))
 
 
 
