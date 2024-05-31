@@ -1,1 +1,1 @@
-web: gunicorn gecom.wsgi:application --bind 0.0.0.0:$PORT
+web: gunicorn gecom.wsgi:application 
