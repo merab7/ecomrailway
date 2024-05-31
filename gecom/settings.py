@@ -17,7 +17,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.0', 'mtecom.up.railway.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mtecom.up.railway.app']
 
 CSRF_TRUSTED_ORIGINS = ['https://mtecom.up.railway.app']
 
@@ -89,7 +89,7 @@ DATABASES = {
 
 
 POSTGRES_LOCALLY=False
-if env.bool('PRODUCTION') or env.bool('POSTGRES_LOCALLY'):
+if env.bool('PRODUCTION') or POSTGRES_LOCALLY:
     DATABASES['default']= dj_database_url.parse(env('DATABASE_URL'))
 
 
