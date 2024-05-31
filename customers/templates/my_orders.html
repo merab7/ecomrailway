@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% block content %}<!---->
+{% load i18n %}
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">
+        {{ user.username }}'s {% trans "Orders" %}
+      </h1>
+      <p class="lead fw-normal text-white-50 mb-0">
+        {% trans "With this shop homepage template" %}
+      </p>
+    </div>
+  </div>
+</header>
+<!-- my_orders.html -->
+
+<div class="container border p-5 mt-5">
+  <h2>{% trans "My Orders" %}</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>{% trans "Order ID" %}</th>
+        <th>{% trans "Date" %}</th>
+        <th>{% trans "Status" %}</th>
+        <th>{% trans "Order Description" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order_data in page_obj %}
+      <tr {% if order_data.status %}class="table-success" {% endif %}>
+        <td>{{ order_data.order_id }}</td>
+        <td>{{ order_data.date }}</td>
+        {% if order_data.status %}
+        <td>{% trans "Shipped" %}</td>
+        {% else %}
+        <td>{% trans "Pending" %}</td>
+        {% endif %}
+        <td>
+          <ul>
+            {% for item in order_data.order_desc %}
+            <li>
+              <strong>Product Name:</strong> {{ item.product_name }}
+              <strong>Quantity:</strong> {{ item.quantity }}
+              <strong>Price:</strong> {{ item.price }}
+              <strong>Size:</strong> {{item.size }}
+            </li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <!-- Pagination controls -->
+  <div class="pagination mt-5 mb-5">
+    <span class="step-links">
+      {% if page_obj.has_previous %}
+      <a href="?page=1">&laquo; {% trans "first" %}</a>
+      <a href="?page={{ page_obj.previous_page_number }}"
+        >{% trans "previous" %}</a
+      >
+      {% endif %}
+
+      <span class="current">
+        {% trans "Page" %} {{ page_obj.number }} {% trans "of" %}
+        <!--  -->
+        {{ page_obj.paginator.num_pages }}.
+      </span>
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">next</a>
+      <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+    </span>
+  </div>
+</div>
+<br /><br /><br /><br /><br /><br />
+{% endblock %}

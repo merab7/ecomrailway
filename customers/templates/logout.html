@@ -1,0 +1,15 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
+<!---->
+{% load i18n %}
+<br /><br /><br /><br /><br /><br /><br /><br />
+<div class="container content-section mt-5">
+  <div class="border p-5 text-center">
+    <h2 class="mb-4">{% trans "You have been logged out" %}</h2>
+    <p class="mb-4">{% trans "Thanks for visiting. See you again soon!" %}</p>
+    <a href="{% url 'login' %}" class="btn btn-primary"
+      >{% trans "Log In Again" %}</a
+    >
+  </div>
+</div>
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+{% endblock %}

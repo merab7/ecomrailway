@@ -1,0 +1,119 @@
+{% extends 'base.html' %} {% block content %}
+<!-- Header-->
+<!---->
+{% load i18n %}
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">Shop in style</h1>
+      <p class="lead fw-normal text-white-50 mb-0">
+        With this shop homepage template
+      </p>
+    </div>
+  </div>
+</header>
+
+<!-- Section-->
+<section class="py-5">
+  <div class="container px-5 px-lg-5 mt-5">
+    <div
+      class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-3 row-cols-xl-4 justify-content-center"
+    >
+      {% for product in page_obj %} {% if product.sale > 0 %}
+      <div class="col mb-5">
+        <div class="card h-100 p-4">
+          <!-- Sale badge-->
+          <div
+            class="badge bg-dark text-white position-absolute"
+            style="top: 0.5rem; right: 0.5rem"
+          >
+            {{ product.sale }} % Sale
+          </div>
+          <!-- Product image-->
+          <img
+            class="card-img-top img-fluid"
+            style="max-height: 200px"
+            src="{{ product.image.url }}"
+            alt="..."
+          />
+
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h6 class="fw-bolder">{% trans product.name %}</h6>
+              <!-- Product price-->
+              <span class="text-muted text-decoration-line-through">
+                ${{ product.price }}
+              </span>
+              ${{ product.new_price }}
+            </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center">
+              <a
+                class="btn btn-outline-dark mt-auto"
+                href="{% url 'details' product.id %}"
+                >{% trans "View option" %}</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col mb-5">
+        <div class="card h-100 p-4">
+          <!-- Product image-->
+          <img
+            class="card-img-top img-fluid"
+            style="max-height: 200px"
+            src="{{ product.image.url }}"
+            alt="..."
+          />
+
+          <!-- Product details-->
+          <div class="card-body p-4 text-center">
+            <h6 class="fw-bolder">{% trans product.name %}</h6>
+            <div class="text-center">${{ product.price }}</div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center">
+              <a
+                class="btn btn-outline-dark mt-auto"
+                href="{% url 'details' product.id %}"
+                >{% trans "View option" %}</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+
+    <!-- Pagination controls -->
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; {% trans "first" %}</a>
+        <a href="?page={{ page_obj.previous_page_number }}"
+          >{% trans "previous" %}</a
+        >
+        {% endif %}
+
+        <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">{% trans "nex" %}t</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}"
+          >{% trans "last" %} &raquo;</a
+        >
+        {% endif %}
+      </span>
+    </div>
+  </div>
+</section>
+{% endblock %}

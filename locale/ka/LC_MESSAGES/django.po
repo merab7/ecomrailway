@@ -1,0 +1,257 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-24 23:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: .\card\templates\cart_sum.html:60
+msgid "Confirm Delete"
+msgstr "დაადასტურე წაშლა"
+
+#: .\card\templates\cart_sum.html:69
+msgid "Are you sure you want to delete"
+msgstr "დარწმუნებული ხარ რომ გინდა წაშალო"
+
+#: .\card\templates\cart_sum.html:83
+msgid "Yes, Delete"
+msgstr "დიახ წაშალე"
+
+#: .\card\templates\cart_sum.html:96
+msgid "SUM"
+msgstr "ჯამი"
+
+#: .\card\templates\cart_sum.html:100
+msgid "Check Out"
+msgstr "გადახდის მოთხოვნა"
+
+#: .\card\templates\cart_sum.html:107
+msgid "your cart is empty!"
+msgstr "თქვენი კალათა ცარიელია"
+
+#: .\card\templates\edit.html:75
+msgid "Previous"
+msgstr "წინა"
+
+#: .\card\templates\edit.html:84
+msgid "Next"
+msgstr "შემდეგი"
+
+#: .\card\templates\edit.html:97
+msgid "Description"
+msgstr "აღწერილობა"
+
+#: .\card\templates\edit.html:108
+msgid "Choose the size"
+msgstr "აირჩიეთ ზომა"
+
+#: .\card\templates\edit.html:120
+msgid "Available"
+msgstr "ხელმისაწვდომია"
+
+#: .\card\templates\edit.html:153
+msgid "Please choose right size"
+msgstr "გთხოვთ აირჩიოთ სწორი ზომა"
+
+#: .\card\templates\edit.html:155
+msgid "Please choose right quantity"
+msgstr "გთხოვთ არიჩიოთ სწორი რაოდენობა"
+
+#: .\customers\forms.py:14
+msgid "username"
+msgstr "მომხმარებლის სახელი"
+
+#: .\customers\forms.py:15
+msgid "email"
+msgstr "ელ.ფოსტა"
+
+#: .\customers\forms.py:16
+msgid "first name"
+msgstr "სახელი"
+
+#: .\customers\forms.py:17
+msgid "last name"
+msgstr "გვარი"
+
+#: .\customers\forms.py:18
+msgid "address"
+msgstr "მისამართი"
+
+#: .\customers\forms.py:19
+msgid "city"
+msgstr "ქალაქი"
+
+#: .\customers\forms.py:20
+msgid "Phone"
+msgstr "ტელეფონის ნომერი"
+
+#: .\customers\forms.py:21
+msgid "zipcode"
+msgstr "საფოსტო ინდექსი"
+
+#: .\customers\templates\logout.html:7
+msgid "You have been logged out"
+msgstr "თქვენ გახვედით"
+
+#: .\customers\templates\logout.html:8
+msgid "Thanks for visiting. See you again soon!"
+msgstr "გმადლობთ რომ გვესტუმრეთ. შეხვედრამდე!"
+
+#: .\customers\templates\logout.html:10
+msgid "Log In Again"
+msgstr "თავიდან შესვლა"
+
+#: .\customers\templates\my_orders.html:7
+msgid "Orders"
+msgstr "შეკვეთები"
+
+#: .\customers\templates\my_orders.html:10
+msgid "With this shop homepage template"
+msgstr ""
+
+#: .\customers\templates\my_orders.html:18
+msgid "My Orders"
+msgstr "ჩემი შეკვეთები"
+
+#: .\customers\templates\my_orders.html:22
+msgid "Order ID"
+msgstr "შეკვეთის ნომერი"
+
+#: .\customers\templates\my_orders.html:23
+msgid "Date"
+msgstr "თარიღი"
+
+#: .\customers\templates\my_orders.html:24
+msgid "Status"
+msgstr "მდგომარეობა"
+
+#: .\customers\templates\my_orders.html:25
+msgid "Order Description"
+msgstr "შეკვეთის აღწერა"
+
+#: .\customers\templates\my_orders.html:34
+msgid "Shipped"
+msgstr "გაგზავნილია"
+
+#: .\customers\templates\my_orders.html:36
+msgid "Pending"
+msgstr "პროცესშია"
+
+#: .\customers\templates\my_orders.html:58
+msgid "first"
+msgstr "პირველი"
+
+#: .\customers\templates\my_orders.html:60
+msgid "previous"
+msgstr "წინა"
+
+#: .\customers\templates\my_orders.html:65
+msgid "Page"
+msgstr "გვერდი"
+
+#: .\customers\templates\my_orders.html:65
+msgid "of"
+msgstr " "
+
+#: .\customers\templates\password_reset_done.html:8
+msgid "Your Password has been set. You may go ahead and login"
+msgstr "თქვენი პაროლი დაყენებულია. შეგიძლიათ შეხვიდეთ"
+
+#: .\customers\templates\password_reset_done.html:13
+#: .\customers\templates\registration\login.html:6
+#: .\customers\templates\registration\login.html:34
+#: .\store\templates\base.html:87
+msgid "Login"
+msgstr "შესვლა"
+
+#: .\customers\templates\password_reset_form.html:19
+msgid "Please enter your new password so we can verify."
+msgstr "გთხოვთ შეიყვანოთ თქვენი პაროლი რომ მოხდეს დადასტურება"
+
+#: .\customers\templates\password_reset_form.html:27
+msgid "Reset Password"
+msgstr "პაროლის აღდგენა"
+
+#: .\customers\templates\password_reset_sent.html:9
+msgid "We’ve emailed you instructions for setting your password"
+msgstr "ჩვენ მოგწერეთ ინსტრუქციები პაროლის აღსადგენად"
+
+#: .\customers\templates\password_reset_sent.html:16
+#: .\customers\templates\reset_password.html:25
+msgid "Return to Home Page"
+msgstr "მთავარ გვერდზე დაბრუნება"
+
+#: .\customers\templates\registration\login.html:40
+msgid "Don't have an account?"
+msgstr "არ გაქვთ ანგარიში?"
+
+#: .\customers\templates\registration\login.html:41
+msgid "Register"
+msgstr "რეგისტრაცია"
+
+#: .\customers\templates\registration\login.html:47
+msgid "Forgot password?"
+msgstr "დაგავიწყდათ პაროლი?"
+
+#: .\customers\templates\registration\login.html:48
+msgid "Reset"
+msgstr "პაროლის აღდგენა"
+
+#: .\customers\templates\reset_password.html:5
+msgid "Password Reset"
+msgstr "პაროლის აღდგენა"
+
+#: .\customers\templates\reset_password.html:7
+msgid "Forgot your password? Enter your email."
+msgstr "დაგავიწყდათ პაროლი? გთხოვთ შეიყვანოთ თქვენი ელ.ფოსტა"
+
+#: .\customers\templates\reset_password.html:20
+#, fuzzy
+#| msgid "email"
+msgid "Send Email"
+msgstr "ელ.ფოსტა"
+
+#: .\customers\templates\update_password.html:33
+msgid "update password"
+msgstr ""
+
+#: .\gecom\settings.py:112 .\store\templates\base.html:100
+msgid "English"
+msgstr ""
+
+#: .\gecom\settings.py:113 .\store\templates\base.html:101
+msgid "Georgian"
+msgstr ""
+
+#: .\store\templates\base.html:51
+msgid "Home"
+msgstr "საწყისი გვერდი"
+
+#: .\store\templates\base.html:53
+msgid "About"
+msgstr "ჩვენს შესახებ"
+
+#: .\store\templates\base.html:62
+msgid "Categories"
+msgstr "კატეგორიები"
+
+#: .\store\templates\base.html:81
+msgid "Cart"
+msgstr "კალათა"
+
+#: .\store\templates\base.html:95
+msgid "Logout"
+msgstr "გასვლა"

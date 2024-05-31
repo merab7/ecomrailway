@@ -1,0 +1,114 @@
+{% extends 'base.html' %} {% load i18n %} {% block content %}
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">{{ user.username }}'s Cart</h1>
+      <p class="lead fw-normal text-white-50 mb-0">
+        With this shop homepage template
+      </p>
+    </div>
+  </div>
+</header>
+{% if cart_products %}
+<div class="container mt-5 mb-5 border p-3 p-md-5">
+  {% for key, item in quantities.items %}
+  <div class="mb-3 border-bottom mb-2 row align-items-center">
+    <div class="col-12 col-md-4 mb-3 mb-md-0">
+      {% for product in cart_products %} {% if product.name == item.name %}
+      <img
+        src="{{ product.image.url }}"
+        class="img-fluid rounded-start product-image"
+        alt="Product Image"
+      />
+    </div>
+    <div class="col-12 col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{ item.name }}</h5>
+        {% if product.sale > 0 %}
+        <h6 class="card-text">${{ product.new_price }}</h6>
+
+        {% else %}
+        <h6 class="card-text">${{ item.price }}</h6>
+        {% endif %}
+        <h6 class="card-text">Size: {{ item.size }}</h6>
+        <h6 class="card-text">Quantity: {{ item.quantity }}</h6>
+      </div>
+      {% endif %}{% endfor %}
+      <div class="mb-2 mt-4">
+        <div class="mb-2 mt-4">
+          <a
+            class="btn btn-warning"
+            href="{% url 'edit' id=item.id size=item.size %}"
+            >Edit</a
+          >
+
+          <!-- Modal Trigger Button -->
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmDeleteModal"
+          >
+            DEL
+          </button>
+
+          <!-- Modal -->
+          <div class="modal" tabindex="-1" id="confirmDeleteModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">{% trans "Confirm Delete" %}</h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  {% trans "Are you sure you want to delete" %}<!--  -->
+                  {% trans item.name %} (size: {{item.size}})?
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                  <a
+                    href="{% url 'cart_del' id=item.id size=item.size %}"
+                    class="btn btn-danger"
+                    >{% trans "Yes, Delete" %}</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4"
+  >
+    <div class="summary-container text-center text-md-start">
+      <h1 class="summary-heading">{% trans "SUM" %}:</h1>
+      <span class="summary-amount">$ {{summary}}</span>
+    </div>
+    <a href="{% url 'ch_out' %}" class="btn btn-success mt-3 mt-md-0"
+      >{% trans "Check Out" %}</a
+    >
+  </div>
+</div>
+{% else %}
+<div class="container p-5">
+  <div class="alert alert-info" role="alert">
+    {{ user.username }} {% trans "your cart is empty!" %}
+  </div>
+</div>
+{% endif %}
+<br /><br /><br />
+{% endblock %}

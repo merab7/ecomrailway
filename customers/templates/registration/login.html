@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
+<!---->
+{% load i18n %}
+<div class="container mt-5 p-3 p-md-5 d-flex justify-content-center">
+  <div
+    class="col-12 col-md-8 col-lg-6 p-3 p-md-5 border rounded bg-light shadow"
+  >
+    <h2 class="mb-4 text-center">{% trans "Login" %}</h2>
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+      <!-- Display form errors -->
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger" role="alert">
+        <strong>error</strong>
+        <ul>
+          {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <!-- End of form errors -->
+      <!-- Username -->
+      <div class="mb-3">
+        {{ form.username|as_crispy_field }}
+        <div class="invalid-feedback">{{ form.username.errors|join:", " }}</div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        {{ form.password|as_crispy_field }}
+        <div class="invalid-feedback">{{ form.password.errors|join:", " }}</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block mt-4">
+        {% trans "Login" %}
+      </button>
+    </form>
+
+    <div class="mt-4 text-center">
+      <small
+        >{% trans "Don't have an account?" %}
+        <a href="{% url 'signup' %}">{% trans "Register" %}</a>
+      </small>
+    </div>
+
+    <div class="mt-2 text-center">
+      <small
+        >{% trans "Forgot password?" %}
+        <a href="{% url 'reset_password' %}">{% trans "Reset" %}</a>
+      </small>
+    </div>
+  </div>
+</div>
+{% endblock %}

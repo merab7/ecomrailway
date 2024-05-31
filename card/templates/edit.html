@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+      <div class="text-center text-white">
+        <h1 class="display-4 fw-bolder">Update {{ product_from_model.name }}</h1>
+        <p class="lead fw-normal text-white-50 mb-0">
+          With this shop homepage template
+        </p>
+      </div>
+    </div>
+  </header>
+<div class="container mt-5">  
+    <section class="container-fluid mt-5">
+        <div class="row">
+          <div class="col-12 col-lg-6 mb-4 mb-lg-0">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              </div>
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img class="d-block w-100 carousel-image" src="{{ product_from_model.image.url }}" alt="Slide 1" />
+                </div>
+                <div class="carousel-item">
+                  <img class="d-block w-100 carousel-image" src="{{ product_from_model.model_image_1.url }}" alt="Slide 2" />
+                </div>
+                <div class="carousel-item">
+                  <img class="d-block w-100 carousel-image" src="{{ product_from_model.model_image_2.url }}" alt="Slide 3" />
+                </div>
+              </div>
+
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">{% trans "Previous" %}</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">{% trans "Next" %}</span>
+              </button>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="card h-100 p-4">
+              <div class="card-body text-center">
+                <h4 class="fw-bolder border-bottom mb-5 pb-4">{{ product.name }}</h4>
+                <p class="border-bottom mb-5 pb-5">{% trans "Description" %}: <br></br> {% trans product_from_model.description %}</p>
+                {% if product_from_model.sale > 0 %}
+                <span class="text-muted text-decoration-line-through">
+                  <h4>${{ product_from_model.price }}</h4>
+                </span>
+                <h4>${{ product_from_model.new_price }}</h4>
+                {% else %}
+                <h4>${{ product_from_model.price }}</h4>
+                {% endif %}
+                <h5 class="mt-5 mb-3">{% trans "Choose the size" %}</h5>
+                <select class="form-select mt-2 mb-5" id="size-select">
+                  <option selected value="{{ product.size }}">{{ product.size }}</option>
+                  {% for size in size_count %}
+                  {% if size.size != product.size %}
+                  <option value="{{ size.size }}">{{ size.size }}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+                <div class="d-flex pb-2">
+                  <h5>{% trans "Available" %}:</h5>
+                  <h5 id="in_stock"></h5>
+                </div>
+                <div class="d-flex justify-content-between col-12 col-sm-5 mx-auto mb-3">
+                  <button id="decrement" class="btn btn-outline-dark">-</button>
+                  <h5 id="quantity" class="text-center mt-2">{{ product.quantity }}</h5>
+                  <button id="increment" class="btn btn-outline-dark">+</button>
+                </div>
+                <div class="text-center">
+                  <button value="{{ product.id }}" id="update" class="btn btn-success mt-auto" cart_key="{{ cart_key }}" disabled>Update</button>
+                  <div id="validation-message" class="text-danger mt-3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>    
+
+<script>
+function validateUpdate() {
+    var selectedSize = $('#size-select').val();
+    var quantity = parseInt($('#quantity').text());
+    var validSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+    var isValidSize = validSizes.includes(selectedSize);
+    var isQuantityValid = quantity > 0;
+
+    if (isValidSize && isQuantityValid) {
+        $('#update').prop('disabled', false);
+        $('#validation-message').text('');
+    } else {
+        $('#update').prop('disabled', true);
+        if (!isValidSize) {
+            $('#validation-message').text('{% trans "Please choose right size" %}.');
+        } else if (!isQuantityValid) {
+            $('#validation-message').text('{% trans "Please choose right quantity" %}.');
+        }
+    }
+}
+
+$(document).ready(function() {
+    $('#size-select').change(validateUpdate);
+    $('#increment, #decrement').click(validateUpdate);
+
+    $(document).on('click', '#size-select', function(e){
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'max_quantity' %}",
+            data: {
+                product_id: $('#update').val(),
+                product_size: $('#size-select option:selected').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            success: function(json){
+                $('#in_stock').text(json.max_quantity);
+                validateUpdate();
+            },
+            error: function(xhr, errmsg, err){
+                // Handle error
+            }
+        });
+    });
+
+    $(document).on('click', '#update', function(e){
+        e.preventDefault();
+        var cart_key = $(this).attr('cart_key'); // Retrieve cart_key from the button attribute
+
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'update' %}",
+            data: {
+                product_id: $(this).val(),
+                product_size: $('#size-select option:selected').val(),
+                user_quantity: $('#quantity').text(),
+                cart_key: cart_key, 
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            success: function(json){
+                $('#cart_count').html(json.count);
+                $('#quantity').html(0);
+                // Redirect to the cart summary page after successful update
+                window.location.href = "{% url 'cart_sum' %}";
+            },
+            error: function(xhr, errmsg, err){
+                // Handle error
+            }
+        });
+    });
+
+    $(document).on('click', '#increment', function(e){
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'quantity' %}",
+            data: {
+                product_id: $('#update').val(),
+                product_size: $('#size-select option:selected').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            success: function(json){
+                var quantity = parseInt($('#quantity').text());
+                var maxQuantity = json.product_quantity;
+                if (quantity < maxQuantity) {
+                    $('#quantity').text(quantity + 1);
+                }
+                validateUpdate();
+            },
+            error: function(xhr, errmsg, err){
+                // Handle error
+            }
+        });
+    });
+
+    $(document).on('click', '#decrement', function(e){
+        e.preventDefault();
+        var quantity = parseInt($('#quantity').text());
+        if (quantity > 1) {
+            $('#quantity').text(quantity - 1);
+        }
+        validateUpdate();
+    });
+});
+</script>  
+
+
+
+</div>
+</br></br></br></br></br></br></br></br></br></br></br></br></br>
+{% endblock %}
