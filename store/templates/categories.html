@@ -1,119 +1,108 @@
-{% extends 'base.html' %} {% block content %}
-<!---->
-{% load i18n %}
-<!-- Header-->
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">{% trans cat_name %}</h1>
-      <p class="lead fw-normal text-white-50 mb-0">
-        With this shop homepage template
-      </p>
+{% extends 'base.html' %} {% load i18n %} {% block content %}
+
+<!-- Products Section -->
+<section class="mt-5 ps-7 pe-7 pb-3 lg-ps-3 lg-pe-3 sm-pb-6 xs-px-0">
+  <div class="container">
+    <div class="row mb-5 xs-mb-8">
+      <div class="container">
+        <div class="row mb-5 xs-mb-8">
+          <div class="col-12 text-center">
+            {% if request.LANGUAGE_CODE == 'ka' %}
+            <h2 class="alt-font text-dark-gray mb-0 ls-minus-2px">
+              <span class="text-highlight fw-600">
+                {{category.name }}<span
+                  class="bg-base-color h-5px bottom-2px"
+                ></span>
+              </span>
+            </h2>
+            {% else %}
+            <h2 class="alt-font text-dark-gray mb-0 ls-minus-2px">
+              <span class="text-highlight fw-600">
+                {{ category.name_en }}<span
+                  class="bg-base-color h-5px bottom-2px"
+                ></span>
+              </span>
+            </h2>
+            {% endif %}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</header>
-
-<!-- Section-->
-<section class="py-5">
-  <div class="container px-5 px-lg-5 mt-5">
-    <div
-      class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-3 row-cols-xl-4 justify-content-center"
-    >
-      {% for product in page_obj %} {% if product.sale > 0 %}
-      <div class="col mb-5">
-        <div class="card h-100 p-4">
-          <!-- Sale badge-->
-          <div
-            class="badge bg-dark text-white position-absolute"
-            style="top: 0.5rem; right: 0.5rem"
-          >
-            {{ product.sale }} % Sale
-          </div>
-          <!-- Product image-->
-          <img
-            class="card-img-top img-fluid"
-            style="max-height: 200px"
-            src="{{ product.image.url }}"
-            alt="..."
-          />
-
-          <!-- Product details-->
-          <div class="card-body p-4">
-            <div class="text-center">
-              <!-- Product name-->
-              <h6 class="fw-bolder">{% trans product.name %}</h6>
-              <!-- Product price-->
-              <span class="text-muted text-decoration-line-through">
-                ${{ product.price }}
-              </span>
-              ${{ product.new_price }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <ul class="shop-modern d-flex justify-content-between flex-wrap">
+          {% for product in page_obj %}
+          <li class="grid-item col-lg-3 col-md-4 col-sm-6 col-xs-12 mb-4">
+            <div class="shop-box mb-10px p-5 fixed-size">
+              <div class="shop-image mb-20px position-relative">
+                <a href="{% url 'details' product.id %}">
+                  <img
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                    class="img-fluid"
+                  />
+                  <div
+                    class="shop-overlay bg-gradient-gray-light-dark-transparent"
+                  ></div>
+                  {% if product.sale > 0 %}
+                  <div
+                    class="sale-percentage position-absolute top-0 start-0 bg-danger text-white px-2 py-1"
+                  >
+                    {{ product.sale }}% {% trans "Off" %}
+                  </div>
+                  {% endif %}
+                  <div class="shop-hover d-flex justify-content-center align-items-center w-100 h-100 position-absolute top-0 start-0">
+                    <div class="shop-buttons-wrap">
+                      <a href="{% url 'details' product.id %}" class="alt-font btn btn-small btn-box-shadow btn-round-edge left-icon add-to-cart custom-add-to-cart-btn" style="background-color: black; color: white;">
+                        <i class="bi-cart-fill"></i>
+                        <span class="quick-view-text button-text">{% trans "Add to cart" %}</span>
+                      </a>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="shop-footer text-center">
+                {% if request.LANGUAGE_CODE == 'ka' %}
+                <a href="{% url 'details' product.id %}" class="alt-font text-dark-gray fs-19 fw-500">{{ product.name }}</a>
+                {% else %}
+                <a href="{% url 'details' product.id %}" class="alt-font text-dark-gray fs-19 fw-500">{{ product.name_en }}</a>
+                {% endif %}
+                {% if product.sale > 0 %}
+                <div class="price lh-22 fs-16">
+                  <del>${{ product.price }}</del> ${{ product.new_price }}
+                </div>
+                {% else %}
+                <div class="price lh-22 fs-16">${{ product.price }}</div>
+                {% endif %}
+              </div>
             </div>
-          </div>
-          <!-- Product actions-->
-          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center">
-              <a
-                class="btn btn-outline-dark mt-auto"
-                href="{% url 'details' product.id %}"
-                >{% trans "View option" %}</a
-              >
-            </div>
-          </div>
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="pagination justify-content-center mt-5">
+          <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">« {% trans "first" %}</a>
+            <a href="?page={{ page_obj.previous_page_number }}"
+              >{{ page_obj.previous_page_number }}</a
+            >
+            {% endif %}
+            <span class="pagination">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}"
+              >{{ page_obj.next_page_number }}</a
+            >
+            <a href="?page={{ page_obj.paginator.num_pages }}">»</a>
+            {% endif %}
+          </span>
         </div>
       </div>
-      {% else %}
-      <div class="col mb-5">
-        <div class="card h-100 p-4">
-          <!-- Product image-->
-          <img
-            class="card-img-top img-fluid"
-            style="max-height: 200px"
-            src="{{ product.image.url }}"
-            alt="..."
-          />
-
-          <!-- Product details-->
-          <div class="card-body p-4 text-center">
-            <h6 class="fw-bolder">{% trans product.name %}</h6>
-            <div class="text-center">${{ product.price }}</div>
-          </div>
-          <!-- Product actions-->
-          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center">
-              <a
-                class="btn btn-outline-dark mt-auto"
-                href="{% url 'details' product.id %}"
-                >{% trans "View option" %}</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endif %} {% endfor %}
-    </div>
-
-    <!-- Pagination controls -->
-    <div class="pagination">
-      <span class="step-links">
-        {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo; {% trans "first" %}</a>
-        <a href="?page={{ page_obj.previous_page_number }}"
-          >{% trans "previous" %}</a
-        >
-        {% endif %}
-
-        <span class="current">
-          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">{% trans "nex" %}t</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}"
-          >{% trans "last" %} &raquo;</a
-        >
-        {% endif %}
-      </span>
     </div>
   </div>
 </section>
+
 {% endblock %}

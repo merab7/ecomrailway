@@ -1,143 +1,225 @@
-{% load static %}{% load i18n %}
+{% load static %} {% load i18n %}
 <!DOCTYPE html>
-<html lang="{% get_current_language as language_code %}">
+<html class="no-js" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Shop Homepage - Ecom</title>
-    <!-- Favicon -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="M.T." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Buy high-quality football jerseys of your favorite teams. Show your support by wearing the colors of your team. Discover a wide range of football jerseys available for all fans." />
+    <meta name="keywords" content="football jerseys, buy football jerseys, team jerseys, sports apparel, fan merchandise, football fan gear, soccer jerseys, team colors, high-quality jerseys, football team shirts, georgian national team, retro football shirts, georgia national football team shirts, kharikha, hariha" />
+    <meta name="description" lang="ka" content="იყიდე შენი საყვარელი გუნდის მაღალი ხარისხის მაისური. ატარე შენი გუნდის ფერები და აჩვენე მხარდაჭერა. აღმოაჩინე ფართო არჩევანი ფეხბურთის გულშემატკივრებისთვის." />
+    <meta name="keywords" lang="ka" content="ფეხბურთის მაისურები, შეიძინე ფეხბურთის მაისურები, გუნდის მაისურები, სპორტული ტანსაცმელი, გულშემატკივრის ატრიბუტიკა, ფეხბურთის გულშემატკივართა სამოსი, გუნდის ფერები, მაღალი ხარისხის მაისურები, ფეხბურთის გუნდის მაისურები, რეალ მადრიდის მაისურები, ბარსელონას მაისურები, რეტორო დიზაინის ფეხბურთის მაისურები, ხარიხა, ჰარიჰა, საქართველოს ნაკრების ფორმები, საქართველოს ნაკრების მაისურები" />
+    <!-- favicon icon -->
+
     <link
-      rel="icon"
-      type="image/x-icon"
-      href="{% static 'assets/favicon.ico' %}"
+      rel="apple-touch-icon"
+      href="{% static 'images/apple-touch-icon-57x57.png' %}"
     />
-    <!-- Bootstrap icons -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="{% static 'images/apple-touch-icon-72x72.png' %}"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="{% static 'images/apple-touch-icon-114x114.png' %}"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      integrity="sha384-XXX"
+      crossorigin="anonymous"
+    />
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="{% static 'css/vendors.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/icon.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'demos/fashion-store/fashion-store.css' %}"
+    />
+
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Core theme CSS (includes Bootstrap) -->
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+
     <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.7.1.min.js"
       integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
       crossorigin="anonymous"
     ></script>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-      <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="{% url 'home' %}">Ecom</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-            <li class="nav-item">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                href="{% url 'home' %}"
-                >{% trans "Home" %}</a
-              >
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                id="navbarDropdown"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                >{% trans "Categories" %}</a
-              >
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                {% for category in categories %}
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="{% url 'category' cat_name=category.name %}"
-                    >{% trans category.name %}</a
-                  >
-                </li>
-                {% endfor %}
-              </ul>
-            </li>
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            {% if user.is_authenticated %}
-            <li class="nav-item m-2">
-              <a href="{% url 'profile' %}" class="btn btn-outline-success"
-                >{{ user.username }}</a
-              >
-            </li>
-            {% endif %}
-            <li class="nav-item dropdown m-2">
-              <button
-                class="btn btn-secondary dropdown-toggle"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {% trans "EN" %}
-              </button>
-              <ul class="dropdown-menu m-2">
-                <li>
-                  <a href="{% url 'set_language' 'en' %}"
-                    >{% trans "English" %}</a
-                  >
-                </li>
-                <li>
-                  <a href="{% url 'set_language' 'ka' %}"
-                    >{% trans "Georgian" %}</a
-                  >
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item m-2">
-              <a href="{% url 'cart_sum' %}" class="btn btn-outline-dark">
-                <i class="bi-cart-fill me-1"></i>
-                {% trans "Cart" %}
-                <span
-                  class="badge bg-dark text-white ms-1 rounded-pill"
-                  id="cart_count"
-                  >{{ cart|length }}</span
-                >
-              </a>
-            </li>
-            {% if not user.is_authenticated %}
-            <li class="nav-item">
-              <a href="{% url 'login' %}" class="btn">{% trans "Login" %}</a>
-            </li>
-            {% endif %} {% if user.is_authenticated %}
-            <li class="nav-item m-2">
-              <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button class="btn" type="submit">{% trans "Logout" %}</button>
-              </form>
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </nav>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+
+    <!-- Swiper CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  </head>
+  <body data-mobile-nav-style="classic">
+    <!-- Start header -->
+    <header>
+      <nav
+        class="bg-base-color navbar navbar-expand-lg header-light p-1 "
+      >
+        <div class="container-fluid ">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-line"></span>
+            <span class="navbar-toggler-line"></span>
+            <span class="navbar-toggler-line"></span>
+            <span class="navbar-toggler-line"></span>
+          </button>
+
+          <div >
+            <div
+              class="collapse navbar-collapse "
+              id="navbarNav"
+            >
+              <ul
+                class="navbar-nav alt-font navbar-left justify-content-between"
+              >
+                <li class="nav-item">
+                  <a
+                    class="nav-link active fs-4"
+                    aria-current="page"
+                    href="{% url 'home' %}"
+                    >{% trans "Home" %}</a
+                  >
+                </li>
+                <!-- this links appears only when user is home page -->
+                {% if request.resolver_match.url_name == 'home' %}
+                <li class="nav-item">
+                  <a class="nav-link fs-4" href="#categories-section">{% trans "Categories" %}</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link fs-4" href="#products-section">{% trans "Products" %}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link fs-4" href="#faq">{% trans "FAQ" %}</a>
+                </li>
+                {% if request.LANGUAGE_CODE == 'en' %}
+                <li class="nav-item">
+                  <a class="nav-link fs-4" href="#contact">{% trans "Contact" %}</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                  <a class="nav-link fs-4" href="#contact">{% trans "კონტაქტი" %}</a>
+                </li>
+                {% endif %}
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+          <div >
+            <div class="header-icon ">
+              <div>
+                <a
+                  href="{% url 'cart_sum' %}"
+                  class="btn cart-link d-flex align-items-center"
+                >
+                  <i class="bi-cart-fill me-1 fs-4 "></i>
+                  <span
+                    class="badge bg-dark text-white ms-1 fs-6 rounded-pill"
+                    id="cart_count"
+                  >
+                    {{ cart|length }}
+                  </span>
+                </a>
+              </div>
+   
+
+
+
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <div class="mt-8">
+              {% if user.is_authenticated %}
+              <div class="widget-text icon alt-font">
+                <a href="{% url 'profile' %}">
+                  <i class="fas fa-user d-inline-block fs-5 me-5px"></i>
+                  <span class="d-none d-xxl-inline-block fs-5">
+                    {% trans "Account" %}
+                  </span>
+                </a>
+              </div>
+              {% endif %}
+            </div>
+            <div class="mt-6">
+              <ul>
+                <li class="nav-item dropdown ">
+                  <button
+                    class="btn dropdown-toggle fs-5"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {% trans "EN" %}
+                  </button>
+                  <ul class="dropdown-menu   text-center ">
+                    <li>
+                      <a href="{% url 'set_language' 'en' %}"
+                        >{% trans "English" %}</a
+                      >
+                    </li>
+                    <li>
+                      <a href="{% url 'set_language' 'ka' %}"
+                        >{% trans "ქართული" %}</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              
+            </div>
+            <div class="mt-7">
+            {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}" class="btn"> <i class="fa-solid fa-right-from-bracket fs-6">{% trans "Login" %}</i></a>
+            {% else %}
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button class="btn" type="submit"><i class="fa-solid fa-right-from-bracket fs-6">{% trans "Logout" %}</i></button>
+            </form>
+            {% endif %}
+          </div>
+          </div>
+        </div>
+
+      </nav>
+    </header>
+
+    <!-- Messages -->
     {% if messages %}
-    <div class="container mt-5 pt-3">
+    <div class="container-fluid mt-5 pt-3 position-absolute">
       {% for message in messages %}
       <div
         class="alert alert-{{ message.tags }} alert-dismissible fade show"
@@ -155,19 +237,29 @@
     </div>
     {% endif %}
 
-    <main class="container mt-5 pt-3">{% block content %} {% endblock %}</main>
+    <!-- Main content -->
+    {% block content %}{% endblock %}
 
+    <!-- Footer -->
     <footer class="py-5 bg-dark">
       <div class="container">
         <p class="m-0 text-center text-white">
-          Copyright &copy; Your Website 2023
+          Copyright &copy; Hariha.ხარიხა {{ 2024 }}
         </p>
       </div>
     </footer>
 
-    <!-- Bootstrap core JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS -->
-    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+      document.querySelectorAll("a.nav-link[href^='#']").forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+          // Close the navbar-collapse when a link is clicked
+          document.querySelector(".navbar-collapse").classList.remove("show");
+        });
+      });
+    </script>
   </body>
 </html>

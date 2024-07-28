@@ -1,0 +1,62 @@
+{% load static %} {% load i18n %}
+<div class="row">
+    <div class="col-12">
+      <ul class="shop-modern d-flex justify-content-between flex-wrap ">
+        {% for product in page_obj %}
+        <li class="grid-item col-lg-3 col-md-4 col-sm-6 col-xs-12 mb-4 ">
+          <div class="shop-box mb-10px p-5">
+            <div class="shop-image mb-20px position-relative">
+              <a href="{% url 'details' product.id %}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" />
+                <div class="shop-overlay bg-gradient-gray-light-dark-transparent"></div>
+                {% if product.sale > 0 %}
+                <div class="sale-percentage position-absolute top-0 start-0 bg-danger text-white px-2 py-1">
+                  {{ product.sale }}%{% trans "Off" %}
+                </div>
+                {% endif %}
+                <div class="shop-hover d-flex justify-content-center align-items-center w-100 h-100 position-absolute top-0 start-0">
+                  <div class="shop-buttons-wrap">
+                    <a href="{% url 'details' product.id %}" class="alt-font btn btn-small btn-box-shadow btn-round-edge left-icon add-to-cart custom-add-to-cart-btn" style="background-color: black; color: white;">
+                      <i class="bi-cart-fill"></i>
+                      <span class="quick-view-text button-text">{% trans "Add to cart" %}</span>
+                    </a>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="shop-footer text-center">
+              {% if request.LANGUAGE_CODE == 'ka' %}
+              <a href="{% url 'details' product.id %}" class="alt-font text-dark-gray fs-19 fw-500">{{ product.name }}</a>
+              {% else %}
+              <a href="{% url 'details' product.id %}" class="alt-font text-dark-gray fs-19 fw-500">{{ product.name_en }}</a>
+              {% endif %}
+              {% if product.sale > 0 %}
+              <div class="price lh-22 fs-16">
+                <del>${{ product.price }}</del> ${{ product.new_price }}
+              </div>
+              {% else %}
+              <div class="price lh-22 fs-16">${{ product.price }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+  
+      <!-- Pagination controls -->
+      <div class="pagination justify-content-center mt-5">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+          <a href="#" class="page-link" data-page="1">« {% trans "first" %}</a>
+          <a href="#" class="page-link" data-page="{{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+          {% endif %}
+          <span class="pagination">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+          {% if page_obj.has_next %}
+          <a href="#" class="page-link" data-page="{{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+          <a href="#" class="page-link" data-page="{{ page_obj.paginator.num_pages }}">»</a>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+  

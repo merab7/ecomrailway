@@ -71,4 +71,11 @@ class Cart():
 
     def get_quantities(self):
         quantities = self.cart
-        return quantities        
+        return quantities      
+
+    def contains(self, product, size):
+        cart_key = f"{product.id}_{size}"
+        return cart_key in self.cart
+    
+    def is_empty(self):
+       return len(self.cart) == 0

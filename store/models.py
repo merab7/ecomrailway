@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 
 #category for the products
 class Category(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=200, blank=False, null=True)
+    name_en = models.CharField(max_length=200, blank=False, null=True)
+    image = models.ImageField('uploads/products', blank=True, null=True)
 
     def __str__(self) -> str:
         return self.name
@@ -15,10 +17,12 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=False, null=True)
+    name_en = models.CharField(max_length=100, blank=False, null=True)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
     Category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     description = models.CharField(max_length=250,  blank=False, null=True)
+    description_en = models.CharField(max_length=250,  blank=False, null=True)
     image = models.ImageField('uploads/products')
     model_image_1 = models.ImageField('uploads/products', blank=True, null=True)
     model_image_2 = models.ImageField('uploads/products', blank=True, null=True)

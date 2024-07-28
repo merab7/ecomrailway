@@ -1,1 +1,14 @@
-<h2>Activation link has been sent to your email address.</h2>
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<section class="top-space-margin half-section bg-gradient-very-light-gray">
+  <div class="container">
+    <div class="row align-items-center justify-content-center">
+      <div class="col-12 col-xl-8 col-lg-10 text-center position-relative page-title-extra-large">
+        <h2 class="alt-font fw-600 text-dark-gray mb-10px">{% trans "Activation link has been sent to your email address." %}</h2>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

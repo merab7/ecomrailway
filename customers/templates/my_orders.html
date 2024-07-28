@@ -1,20 +1,9 @@
 {% extends 'base.html' %} {% block content %}<!---->
 {% load i18n %}
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">
-        {{ user.username }}'s {% trans "Orders" %}
-      </h1>
-      <p class="lead fw-normal text-white-50 mb-0">
-        {% trans "With this shop homepage template" %}
-      </p>
-    </div>
-  </div>
-</header>
+
 <!-- my_orders.html -->
 
-<div class="container border p-5 mt-5">
+<div class="container  p-5 mt-5">
   <h2>{% trans "My Orders" %}</h2>
   <table class="table table-bordered">
     <thead>

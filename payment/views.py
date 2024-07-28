@@ -2,18 +2,15 @@ from django.shortcuts import render, redirect
 from card.cart import Cart
 from .models import ShippingAddress, Order, Order_item
 from .forms import ShippingInfo, PaymentForm
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib import messages
-from store.models import ProductSize, Product
+from store.models import ProductSize
 import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.utils import formataddr
+from payment.models import CuponCode
+from payment.email_utils import send_order_confirmation
 import environ
-
 env = environ.Env()
 environ.Env.read_env()
+
 
 
 def checkout(request):
@@ -60,7 +57,16 @@ def checkout(request):
         'quantities': quantities,
         'summary': sum(prices),
         'shipping_info': shippingInfo_form,
+        'cupon_code': ''
     }
+
+        #cehcking is prices is cahnged because of cupon code and updating new sum price at order summary
+    if 'cupon' in request.session:
+        context['summary'] = request.session['new_sum']
+        context['cupon_code'] = request.session['cupon']
+ 
+
+
     if cart_products:
         return render(request, 'ch_out.html', context)
     else:
@@ -96,8 +102,16 @@ def billing(request):
             'quantities': quantities,
             'summary': sum(prices),
             'shipping_sum': shipping_sum,
-            'billing_form': billing_form
+            'billing_form': billing_form,
+            'cupon_code': ''
         }
+
+        #cehcking is prices is cahnged because of cupon code and updating new sum price at order summary
+        if 'cupon' in request.session:
+            context['summary'] = request.session['new_sum']
+            context['cupon_code'] = request.session['cupon']
+
+
         return render(request, 'billing.html', context)
     else:
         return redirect('home')
@@ -124,8 +138,8 @@ def proc_order(request):
                     else:
                         prices.append(product.price * item['quantity'])
 
-    if request.method == 'POST':
-        payment_form = PaymentForm(request.POST)
+    if request.session['pay_methode'] == 'at_address' or request.session['pay_methode'] == 'pay_to_account' :   
+
         my_shipping = request.session.get('my_shippInfo', None)
         
         if request.user.is_authenticated:
@@ -138,10 +152,10 @@ def proc_order(request):
             email = my_shipping['email']
             total_paid = sum(prices)
             phone = my_shipping['phone']
-            per_id = my_shipping['per_id']
+
             shipping_address = f"{my_shipping['city']}\n{my_shipping['address']}\n{my_shipping['add_information']}\n{my_shipping['zipcode']}"
 
-            set_order = Order(user=user, fullname=fullname, email=email, address=shipping_address, total_paid_amount=total_paid, phone=phone, per_id=per_id)
+            set_order = Order(user=user, fullname=fullname, email=email, address=shipping_address, total_paid_amount=total_paid, phone=phone)
             set_order.save()
 
             order_id = set_order.pk
@@ -161,38 +175,52 @@ def proc_order(request):
                         set_order_item = Order_item(order=order, product=product_item, user=user, quantity=quantity, price=product_price, size=size)
                         set_order_item.save()
                         #updating products database after successful purchase
-                        for x in ProductSize.objects.all():
-                            if x.product == product_item and x.size == size:
-                                x.quantity = x.quantity - quantity
-                                x.save()
+                        # for x in ProductSize.objects.all():
+                        #     if x.product == product_item and x.size == size:
+                        #         curent_qu = x.quantity
+                        #         x.quantity = curent_qu - quantity
+                        #         x.save()                               
+                                
+                                     
+                                    
 
             # Send purchase confirmation email to the customer
             sum_order = []
             for key, item in quantities.items():
                 for product in cart_products:
-                    if product.name == item['name']:
-                        sum_item = {
-                            'em_name': item['name'],
-                            'em_price': product.new_price if product.sale > 0 else item['price'],
-                            'em_size': item['size'],
-                            'em_quantity': item['quantity']
-                        }
-                        sum_order.append(sum_item)
+                    # name in email will be in georgian
+                    if request.LANGUAGE_CODE == 'ka':
+                        if product.name == item['name']:
+                            sum_item = {
+                                'em_name': product.name,
+                                'em_price': product.new_price if product.sale > 0 else item['price'],
+                                'em_size': item['size'],
+                                'em_quantity': item['quantity']
+                            }
+                            sum_order.append(sum_item)
+                    # name in email will be in english
+                    elif request.LANGUAGE_CODE == 'en':
+                        if product.name == item['name']:
+                                sum_item = {
+                                    'em_name': product.name_en,
+                                    'em_price': product.new_price if product.sale > 0 else item['price'],
+                                    'em_size': item['size'],
+                                    'em_quantity': item['quantity']
+                                }
+                                sum_order.append(sum_item)            
 
-            EMAIL = env('EXCAVATIO')
-            EXCAVATIOPASS = env('EXCAVATIOPASS')
-            message_content = f"Here is your order:\n" + "\n".join([f"n{x['em_name']}\n Price: ₾ {x['em_price']} \n Size: {x['em_size']} \n Quantity: {x['em_quantity']}" for x in sum_order])
-            content = {'order_num': f"Order number: {order.pk}", 'message': message_content, 'sum': total_paid, 'shipping_address':shipping_address}
+            #changing totalpaid for email if therew is  a cuponcode
+            if 'cupon' in request.session:
+                total_paid =  request.session['new_sum']           
+
+            EMAIL = env('MY_EMAIL')
+            EXCAVATIOPASS = env('EMAIL_PASSWORD')
+            content = {'order_num': f"Order number: {order.pk}",  'sum': total_paid, 'shipping_address':shipping_address}
 
             # Create the email message
-            msg = MIMEMultipart()
-            msg['From'] = formataddr(('Ecomge', EMAIL))
-            msg['To'] = email
-            msg['Subject'] = 'Your order confirmation'
-
-            body = f"{content['order_num']}\n{content['message']}\nTotal Paid: {content['sum']}\nShipping address: {content['shipping_address']}"
-            msg.attach(MIMEText(body, 'plain', 'utf-8'))
-
+            
+            msg = send_order_confirmation(email, content, EMAIL, sum_order, language=request.LANGUAGE_CODE)
+ 
             # Send the email
             with smtplib.SMTP('smtp.gmail.com', 587) as mail:
                 mail.ehlo()
@@ -205,11 +233,50 @@ def proc_order(request):
                 if key == 'session_key':
                     del request.session[key]
 
+            
+
+
+            #update payment mehtod in the order
+            pay_method = request.session['pay_methode']
+            order.payment_methode = pay_method
+            order.save()
+
+
+            # delet cupon code form db
+            if 'cupon' in request.session:
+                entered_code = request.session['cupon']
+                codes_in_db = CuponCode.objects.filter(code=entered_code)
+
+                if codes_in_db.exists():
+
+                    order.total_paid_amount = request.session['new_sum']
+                    order.cupon_used = f"{codes_in_db[0].sale_percentage}% code was used. code is:{codes_in_db[0].code}"
+                    order.save()
+
+                    #deleting cupon_code from database after successfull checkout
+                    #for now we are not deleting it and alwo user to use it meny times
+                    #codes_in_db[0].delete()
+                
+            # deleting session
+            if 'cupon' in request.session:
+                del request.session['cupon']
+                del request.session['new_sum']
+
             messages.success(request, "Order Placed")
+            # redirect to gome
             return redirect('home')
         else:
             messages.error(request, "Shipping information is missing.")
             return redirect('checkout')
+    
+    # after implementing card payment i should update this part 
     else:
+        #if porchuse is not ok that regenerate item size quantity
+        for x in ProductSize.objects.all():
+            if x.product == product_item and x.size == size:
+                curent_qu = x.quantity
+                x.quantity = curent_qu + quantity
+                x.save()                               
+    
         return redirect('home')
     

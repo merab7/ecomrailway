@@ -1,114 +1,275 @@
-{% extends 'base.html' %} {% load i18n %} {% block content %}
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">{{ user.username }}'s Cart</h1>
-      <p class="lead fw-normal text-white-50 mb-0">
-        With this shop homepage template
-      </p>
-    </div>
-  </div>
-</header>
-{% if cart_products %}
-<div class="container mt-5 mb-5 border p-3 p-md-5">
-  {% for key, item in quantities.items %}
-  <div class="mb-3 border-bottom mb-2 row align-items-center">
-    <div class="col-12 col-md-4 mb-3 mb-md-0">
-      {% for product in cart_products %} {% if product.name == item.name %}
-      <img
-        src="{{ product.image.url }}"
-        class="img-fluid rounded-start product-image"
-        alt="Product Image"
-      />
-    </div>
-    <div class="col-12 col-md-8">
-      <div class="card-body">
-        <h5 class="card-title">{{ item.name }}</h5>
-        {% if product.sale > 0 %}
-        <h6 class="card-text">${{ product.new_price }}</h6>
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
 
-        {% else %}
-        <h6 class="card-text">${{ item.price }}</h6>
-        {% endif %}
-        <h6 class="card-text">Size: {{ item.size }}</h6>
-        <h6 class="card-text">Quantity: {{ item.quantity }}</h6>
-      </div>
-      {% endif %}{% endfor %}
-      <div class="mb-2 mt-4">
-        <div class="mb-2 mt-4">
-          <a
-            class="btn btn-warning"
-            href="{% url 'edit' id=item.id size=item.size %}"
-            >Edit</a
-          >
 
-          <!-- Modal Trigger Button -->
-          <button
-            type="button"
-            class="btn btn-danger"
-            data-bs-toggle="modal"
-            data-bs-target="#confirmDeleteModal"
-          >
-            DEL
-          </button>
+<section class="pt-8 sm-pt-28">
+  <div class="container">
+    <div class="row align-items-start">
+      <div class="col-lg-8 ">
+        <div class="row align-items-center">
+          <div class="col-12">
+            {% if cart_products %}
+            <table class="table cart-products">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col" class="col-2  fw-600">
+                    {% trans "Product" %}
+                  </th>
+                  <th scope="col"></th>
+                  <th scope="col" class="alt-font fw-600">
+                    {% trans "Price" %}
+                  </th>
+                  <th scope="col" class="alt-font fw-600">
+                    {% trans "Quantity" %}
+                  </th>
+                  <th scope="col" class="alt-font fw-600"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for key, item in quantities.items %}
+                {% for product in cart_products %}
+                {% if product.name == item.name %}
+                <tr>
+                  <td class="product-remove">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                      data-bs-target="#confirmDeleteModal{{ item.id }}">
+                      &times;
+                    </button>
+                  </td>
+                  <td class="product-thumbnail">
+                    <a href="{% url 'details' product.id %}"><img class="cart-product-image"
+                        src="{{ product.image.url }}" alt="{{ product.name }}" /></a>
+                  </td>
+                  {% if request.LANGUAGE_CODE == 'ka'  %}
+                  <td class="product-name">
+                    <a href="{% url 'details' product.id %}" class="text-dark-gray fw-500 d-block lh-initial">
+                      {{ product.name }}</a>
+                    <span class="fs-14">{% trans "Size" %}: {{ item.size }}</span>
+                  </td>
+                  {% else %}
+                  <td class="product-name">
+                    <a href="{% url 'details' product.id %}" class="text-dark-gray fw-500 d-block lh-initial">
+                      {{ product.name_en }}</a>
+                    <span class="fs-14">{% trans "Size" %}: {{ item.size }}</span>
+                  </td>
+                  {% endif %}
+                  <td class="product-price" data-title="{% trans 'Price' %}">
+                    {% if product.sale > 0 %} ${{ product.new_price }}
+                    {% else %} ${{ item.price }} {% endif %}
+                  </td>
+                  <td class="product-quantity" data-title="{% trans 'Quantity' %}">
+                    <div class="quantity">
+                      <input class="qty-text" type="text" value="{{ item.quantity }}" aria-label="qty-text" disabled />
+                    </div>
+                  </td>
+                  <td class="product-subtotal">
+                    <a class="btn btn-warning" href="{% url 'edit' id=item.id size=item.size %}">{% trans "Edit" %}</a>
+                  </td>
+                </tr>
 
-          <!-- Modal -->
-          <div class="modal" tabindex="-1" id="confirmDeleteModal">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">{% trans "Confirm Delete" %}</h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="confirmDeleteModal{{ item.id }}" tabindex="-1"
+                  aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">{% trans "Confirm Delete" %}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        {% trans "Are you sure you want to delete" %} {{ item.name }} (size: {{ item.size }})?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <a href="{% url 'cart_del' id=item.id size=item.size %}" class="btn btn-danger">{% trans "Yes, Delete" %}</a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="modal-body">
-                  {% trans "Are you sure you want to delete" %}<!--  -->
-                  {% trans item.name %} (size: {{item.size}})?
-                </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
-                  <a
-                    href="{% url 'cart_del' id=item.id size=item.size %}"
-                    class="btn btn-danger"
-                    >{% trans "Yes, Delete" %}</a
-                  >
-                </div>
+                {% endif %} {% endfor %} {% endfor %}
+              </tbody>
+            </table>
+
+            <div class="row mt-20px">
+              <div class="col-xl-6 col-xxl-7 col-md-6">
+                  <div class="coupon-code-panel">
+                      <input type="text" class="bg-white border-radius-4px" placeholder="{% trans 'Coupon code' %}" id="cupon" />
+                      <button type="button" id="apply" class="btn apply-coupon-btn fs-18 fw-600 text-uppercase">{% trans 'Apply' %}</button>
+                    
+                      <small id="success_text" class="text-green">
+                          {% if request.session.cupon %}
+                              {% with request.session.cupon as cupon_code %}
+                                  {{ cupon_code }} applied ({{ request.session.new_sum }})
+                              {% endwith %}
+                          {% endif %}
+                      </small>
+                      <small id="error" class="text-red"></small>
+                  </div>
               </div>
-            </div>
           </div>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+              {{ user.username }} {% trans "your cart is empty!" %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="bg-very-light-gray border-radius-6px p-30px xl-p-30px lg-p-25px">
+          <span class="fs-26 alt-font fw-600 text-dark-gray mb-5px d-block">{% trans "Cart totals" %}</span>
+          <table class="w-100 total-price-table">
+            <tbody>
+
+              <tr class="shipping">
+                <th class="fw-600 text-dark-gray alt-font">{% trans "Method" %}</th>
+                <td data-title="{% trans 'Shipping' %}">
+                  <ul class="p-0 m-0">
+                    <!-- <li class="d-flex align-items-center">
+                      <input
+                        id="free_shipping"
+                        type="radio"
+                        name="shipping-option"
+                        class="d-block w-auto mb-0 me-10px p-0"
+                        checked="checked"
+                      />
+                      <label class="md-line-height-18px d" for="free_shipping"
+                        >{% trans "with card" %}</label
+                      >
+                    </li> -->
+                    <li class="d-flex align-items-center">
+                      <input id="card" type="radio" name="shipping-option" class="d-block w-auto mb-0 me-10px p-0" disabled />
+                      <label class="md-line-height-18px text-red" for="card">{% trans "Card: coming soon" %}</label>
+                    </li>
+                    <li class="d-flex align-items-center">
+                      <input id="at_address" type="radio" name="shipping-option" class="d-block w-auto mb-0 me-10px p-0" onclick="payAtAddress()" />
+                      <label class="md-line-height-18px" for="at_address">{% trans "Pay at address" %}</label>
+                    </li>
+                    <li class="d-flex align-items-center">
+                      <input id="account_payment" type="radio" name="shipping-option" class="d-block w-auto mb-0 me-10px p-0" onclick="payToAccount()" />
+                      <label class="md-line-height-18px" for="account_payment">{% trans "Pay to account" %}</label>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+              <tr id="account-info" class="d-none">
+                <td colspan="2">
+                  <div class="alert alert-info" role="alert">
+                    {% trans "Account Number: " %}<span id="account-number">1234567890</span>
+                    <button class="btn btn-link" onclick="copyAccountNumber()">{% trans "Copy" %}</button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="calculate-shipping"></tr>
+              <tr class="total-amount">
+                <th class="fw-600 text-dark-gray alt-font pb-0">{% trans "Total" %}</th>
+                <td class="pb-0" data-title="{% trans 'Total' %}">
+                  <h6 class="d-block fw-700 mb-0 text-dark-gray alt-font" id="sum">${{ summary }}</h6>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <a href="{% url 'ch_out' %}"
+            class="btn btn-dark-gray btn-large btn-switch-text btn-round-edge btn-box-shadow w-100 mt-25px"
+            onclick="return validatePaymentChoice();">
+            <span>
+              <span class="btn-double-text" data-text="{% trans 'Proceed to checkout' %}">{% trans 'Proceed to checkout' %}</span>
+            </span>
+          </a>
+         
         </div>
       </div>
     </div>
   </div>
-  {% endfor %}
-  <div
-    class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4"
-  >
-    <div class="summary-container text-center text-md-start">
-      <h1 class="summary-heading">{% trans "SUM" %}:</h1>
-      <span class="summary-amount">$ {{summary}}</span>
-    </div>
-    <a href="{% url 'ch_out' %}" class="btn btn-success mt-3 mt-md-0"
-      >{% trans "Check Out" %}</a
-    >
-  </div>
-</div>
-{% else %}
-<div class="container p-5">
-  <div class="alert alert-info" role="alert">
-    {{ user.username }} {% trans "your cart is empty!" %}
-  </div>
-</div>
-{% endif %}
-<br /><br /><br />
+</section>
+<br><br><br><br><br><br>
+<script>
+$("#apply").click(function () {
+    var cuponCode = $("#cupon").val();
+    var at_address = $("#at_address").val();
+    $.ajax({
+        type: "POST",
+        url: "{% url 'cupon_code' %}",
+        data: {
+            cupon: cuponCode,
+            pay_methode: at_address,
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+            action: "post",
+        },
+        success: function (json) {
+            if (json.new_sum !== undefined) {
+                $("#sum").text(json.new_sum);
+                $("#error").text('');
+                $("#success_text").text(`${json.percetage}% sale has applied`);
+                document.getElementById("cupon").disabled = true;
+                // Update session values
+                request.session.cupon = cuponCode;
+                request.session.new_sum = json.new_sum;
+            }
+        },
+        error: function (xhr, errmsg, err) {
+            if (xhr.responseJSON && xhr.responseJSON.error_text) {
+                $("#success_text").text('');
+                $("#error").text(xhr.responseJSON.error_text);
+            } else {
+                $("#error").text('An error occurred');
+            }
+        },
+    });
+});
+
+function payAtAddress() {
+    $.ajax({
+        url: "{% url 'pay_at_address' %}",
+        type: "GET",
+        data: {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',  
+            'shipping_option': 'at_address'
+        },
+        success: function(response) {
+            // Handle success response
+        },
+        error: function(xhr, status, error) {
+            alert("An error occurred: " + error);
+        }
+    });
+}
+
+function payToAccount() {
+    document.getElementById("account-info").classList.remove("d-none");
+    $.ajax({
+        url: "{% url 'pay_at_address' %}",
+        type: "GET",
+        data: {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',  
+            'shipping_option': 'pay_to_account'
+        },
+        success: function(response) {
+            // Handle success response
+        },
+        error: function(xhr, status, error) {
+            alert("An error occurred: " + error);
+        }
+    });
+}
+
+function copyAccountNumber() {
+    var accountNumber = document.getElementById("account-number").textContent;
+    navigator.clipboard.writeText(accountNumber).then(function() {
+        alert("{% trans 'Account number copied to clipboard!' %}");
+    }, function(err) {
+        alert("{% trans 'Failed to copy account number.' %}");
+    });
+}
+
+function validatePaymentChoice() {
+    if (!$("#at_address").is(":checked") && !$("#account_payment").is(":checked")) {
+        alert("{% trans 'Please select a payment method before proceeding.' %}");
+        return false;
+    }
+    return true;
+}
+</script>
 {% endblock %}

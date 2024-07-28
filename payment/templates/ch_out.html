@@ -1,17 +1,7 @@
 {% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
 <!---->
 {% load i18n %}
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">{% trans "Check out" %}</h1>
-      <p class="lead fw-normal text-white-50 mb-0">
-        With this shop homepage template
-      </p>
-    </div>
-  </div>
-</header>
-<section class="container">
+<section class="container pt-8">
   <div class="row justify-content-center">
     <!-- Order Summary Section -->
     <div class="col-12 col-md-8 col-lg-6 mb-5">
@@ -26,7 +16,11 @@
         <!--  -->
         {% if product.name == item.name %}
         <div class="card-body border-bottom">
-          <h6 class="card-title">{% trans "Name" %}: {{ item.name }}</h6>
+          {% if request.LANGUADGE_CODE == 'ka' %}:
+          <h6 class="card-title">{% trans "Name" %}: {{ product.name }}</h6>
+          {% else %}
+          <h6 class="card-title">{% trans "Name" %}: {{ product.name_en }}</h6>
+          {% endif %}
           {% if product.sale > 0 %}
           <h6 class="card-text">
             {% trans "Price" %}: ${{ product.new_price }}
@@ -36,8 +30,11 @@
           {% endif %}
           <h6 class="card-text">{% trans "Size" %}: {{ item.size }}</h6>
           <h6 class="card-text">{% trans "Quantity" %}: {{ item.quantity }}</h6>
+          
         </div>
         {% endif %} {% endfor %} {% endfor %}
+        <h6 class="card-text p-2 text-red">{% trans "Cupon Code" %}: {{ cupon_code }}</h6>
+        
         <div class="container p-2 text-success">
           <h5>{% trans "Sum" %}: ₾{{summary}}</h5>
         </div>
@@ -55,7 +52,7 @@
             enctype="multipart/form-data"
           >
             {% csrf_token %}
-            <legend class="border-bottom mb-4">
+            <legend class="border-bottom mb-4 ">
               <h3>{% trans "Shipping Info" %}</h3>
             </legend>
             {{ shipping_info|crispy }}

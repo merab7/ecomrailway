@@ -15,6 +15,8 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.sites.shortcuts import get_current_site
 from .tokens import email_verification_token
 from django.contrib.auth.models import User
+from django.core.mail import EmailMultiAlternatives
+
 #this decorator prevents signed users form accessing the register page 
 #it checks if the user is authenticated and if it is sends it to home page 
 #else allows user to access register page
@@ -48,14 +50,22 @@ def signup_view(request):
             # Send verification email
             current_site = get_current_site(request)
             mail_subject = 'Activate your account.'
-            message = render_to_string('account_activation_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': email_verification_token.make_token(user),
-            })
+            message_html = render_to_string('account_activation_email.html', {
+                        'user': user,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token': email_verification_token.make_token(user),
+                        'language_code': request.LANGUAGE_CODE,  # Assuming you have language_code available
+                    })
             to_email = form.cleaned_data.get('email')
-            send_mail(mail_subject, message, 'from@example.com', [to_email])
+            email = EmailMultiAlternatives(
+            subject=mail_subject,
+            body=message_html,
+            from_email='from@example.com',
+            to=[to_email],
+            )
+            email.content_subtype = 'html'  # Ensure content type is HTML
+            email.send()
             
             return render(request, 'account_activation_sent.html')
     else:
@@ -141,7 +151,7 @@ def profile(request):
 
 @login_required
 def my_orders(request):
-    my_orders = Order.objects.filter(user=request.user)
+    my_orders = Order.objects.filter(user=request.user).order_by('-date')
     my_items = Order_item.objects.filter(user=request.user)
     my_order_data = [
     {
@@ -160,7 +170,7 @@ def my_orders(request):
     }
     for my_order in my_orders
 ]
-    paginator = Paginator(my_order_data, 5)
+    paginator = Paginator(my_order_data, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number) 
     context = {

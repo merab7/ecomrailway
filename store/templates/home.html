@@ -1,119 +1,303 @@
-{% extends 'base.html' %} {% block content %}
-<!-- Header-->
-<!---->
+{% extends 'base.html' %}
+{% load static %}
 {% load i18n %}
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">Shop in style</h1>
-      <p class="lead fw-normal text-white-50 mb-0">
-        With this shop homepage template
-      </p>
-    </div>
-  </div>
-</header>
 
-<!-- Section-->
-<section class="py-5">
-  <div class="container px-5 px-lg-5 mt-5">
-    <div
-      class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-3 row-cols-xl-4 justify-content-center"
-    >
-      {% for product in page_obj %} {% if product.sale > 0 %}
-      <div class="col mb-5">
-        <div class="card h-100 p-4">
-          <!-- Sale badge-->
-          <div
-            class="badge bg-dark text-white position-absolute"
-            style="top: 0.5rem; right: 0.5rem"
-          >
-            {{ product.sale }} % Sale
-          </div>
-          <!-- Product image-->
-          <img
-            class="card-img-top img-fluid"
-            style="max-height: 200px"
-            src="{{ product.image.url }}"
-            alt="..."
-          />
-
-          <!-- Product details-->
-          <div class="card-body p-4">
-            <div class="text-center">
-              <!-- Product name-->
-              <h6 class="fw-bolder">{% trans product.name %}</h6>
-              <!-- Product price-->
-              <span class="text-muted text-decoration-line-through">
-                ${{ product.price }}
-              </span>
-              ${{ product.new_price }}
+{% block content %}
+<section class="p-0">
+  <div class="full-screen">
+    <div class="swiper-wrapper">
+      <!-- Swiper slide item -->
+      <div class="swiper-slide overflow-hidden">
+        <div class="w-100 h-100" style="background-color: black">
+          <div class="p-5 position-absolute mt-18 z-1">
+            <div class="mb-4">
+              <!-- Instagram icon and link -->
+              <div class="mb-2">
+                <a href="https://www.instagram.com/your_instagram_page/" target="_blank">
+                  <i class="fab fa-instagram-square fa-3x" style="color: #fefafa"></i>
+                </a>
+              </div>
+              <!-- Facebook icon and link -->
+              <div>
+                <a href="https://www.facebook.com/your_facebook_page/" target="_blank">
+                  <i class="fab fa-facebook-square fa-3x" style="color: #fbfdff"></i>
+                </a>
+              </div>
             </div>
           </div>
-          <!-- Product actions-->
-          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center">
-              <a
-                class="btn btn-outline-dark mt-auto"
-                href="{% url 'details' product.id %}"
-                >{% trans "View option" %}</a
-              >
+          <div class="container h-100">
+            <div class="row align-items-center h-100">
+              <div class="col-md-18 position-relative d-flex flex-column justify-content-center h-100">
+                <div class="d-flex align-items-center flex-column flex-md-row"> <!-- Adjusted class to flex-column for small screens -->
+                  <div class="flex-item mb-3 mb-md-0"> <!-- Added mb-3 for spacing below logo on small screens -->
+                    <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="responsive-img" />
+                  </div>
+                  <div class="flex-item text-center text-md-start ms-md-4"> <!-- Added text-center for small screens and ms-md-4 for left margin on medium screens and up -->
+                    <h2 class="text-white mb-2 mb-md-0">Hariha•ხარიხა</h2>
+                    {% if request.LANGUAGE_CODE == 'ka' %}
+                    <h3 class="text-white-50 mb-0">ატარე შენი გუნდის ფერები!</h3>
+                    {% else %}
+                    <h3 class="text-white-50 mb-0">Wear your team's colors!</h3>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+          
         </div>
       </div>
-      {% else %}
-      <div class="col mb-5">
-        <div class="card h-100 p-4">
-          <!-- Product image-->
-          <img
-            class="card-img-top img-fluid"
-            style="max-height: 200px"
-            src="{{ product.image.url }}"
-            alt="..."
-          />
-
-          <!-- Product details-->
-          <div class="card-body p-4 text-center">
-            <h6 class="fw-bolder">{% trans product.name %}</h6>
-            <div class="text-center">${{ product.price }}</div>
-          </div>
-          <!-- Product actions-->
-          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center">
-              <a
-                class="btn btn-outline-dark mt-auto"
-                href="{% url 'details' product.id %}"
-                >{% trans "View option" %}</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endif %} {% endfor %}
-    </div>
-
-    <!-- Pagination controls -->
-    <div class="pagination">
-      <span class="step-links">
-        {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo; {% trans "first" %}</a>
-        <a href="?page={{ page_obj.previous_page_number }}"
-          >{% trans "previous" %}</a
-        >
-        {% endif %}
-
-        <span class="current">
-          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">{% trans "nex" %}t</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}"
-          >{% trans "last" %} &raquo;</a
-        >
-        {% endif %}
-      </span>
     </div>
   </div>
 </section>
+
+<!-- Categories Section -->
+<section id="categories-section">
+  <div class="container">
+    <div class="row mb-5 xs-mb-8">
+      <div class="col-12 text-center">
+        <h2 class="alt-font text-dark-gray mb-0 ls-minus-2px">
+          <span class="text-highlight fw-600">CATEGORIES<span class="bg-base-color h-5px bottom-2px"></span></span>
+        </h2>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <ul class="shop-modern d-flex justify-content-between flex-wrap">
+      {% for category in categories %}
+      <li class="grid-item col-lg-2 col-md-4 col-sm-6 col-xs-12 mb-4 bg-transparent ">
+        <div class="shop-box mb-10px p-5 ">
+          <div class="shop-image mb-20px position-relative ">
+            <a href="{% url 'category' category.name %}">
+              <img src="{{ category.image.url }}" alt="{{ category.name }}" />
+              <div class="shop-overlay bg-gradient-gray-light-dark-transparent"></div>
+              <div class="shop-hover d-flex justify-content-center align-items-center w-100 h-100 position-absolute top-0 start-0">
+                <div class="shop-buttons-wrap">
+                  <a href="{% url 'category' category.name %}" class="alt-font btn btn-small btn-box-shadow btn-round-edge left-icon add-to-cart custom-add-to-cart-btn" style="background-color: black; color: white;">
+                    <i class="bi-cart-fill"></i>
+                    <span class="quick-view-text button-text">{% trans "See category" %}</span>
+                  </a>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="shop-footer text-center">
+            {% if request.LANGUAGE_CODE == 'ka' %}
+            <a href="{% url 'category' category.name %}" class="alt-font text-dark-gray fs-19 fw-500">{{category.name }}</a>
+            {% else %}
+            <a href="{% url 'category' category.name%}" class="alt-font text-dark-gray fs-19 fw-500">{{ category.name_en }}</a>
+            {% endif %}
+            <!-- <a href="{% url 'category' category.name %}" class="alt-font text-dark-gray fs-19 fw-500">{{ category.name }}</a> -->
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section id="products-section" class="mt-5 ps-7 pe-7 pb-3 lg-ps-3 lg-pe-3 sm-pb-6 xs-px-0 border-bottom p-2">
+  <div class="container">
+    <div class="row mb-5 xs-mb-8">
+      <div class="col-12 text-center">
+        <h2 class="alt-font text-dark-gray mb-0 ls-minus-2px">
+          Best seller
+          <span class="text-highlight fw-600">products<span class="bg-base-color h-5px bottom-2px"></span></span>
+        </h2>
+      </div>
+    </div>
+  </div>
+  <div id="product-list-container">
+    <!-- Include the products partial template -->
+    {% include 'partials/products.html' %}
+
+  </div>
+</section>
+
+<section id="faq">
+  <div  class="container">
+    <h3>{% trans "Frequently Asked Questions" %}</h3>
+    <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    {% trans "How do I order a Jersey?" %}
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    {% trans "Register on the site with a simple procedure(You can also buy without Registration as a Guest), choose the desired Jersey and place your order. You can also contact us on social media to order." %}
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    {% trans "How do I pay for the order?" %}
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    {% trans "Payment by card will be added to the site soon. Until then, you can select the transfer option when ordering and transfer the amount. Payment is also possible to pay when the order is received." %}
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    {% trans "How will I receive my order?" %}
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    {% trans "You can pick up the order yourself at the following locations: Vazha-Pshavela, Tsereteli, or Marjanishvili avenues. If you want to pick up the order yourself, mark the desired location in the additional information field and leave us a contact number." %}
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingfour">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefour" aria-expanded="false" aria-controls="collapseThree">
+                  {% trans "How does the order delivery work?" %}
+              </button>
+          </h2>
+          <div id="collapsefour" class="accordion-collapse collapse" aria-labelledby="headingfour" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                  {% trans "Currently, the delivery is made throughout the central districts of Tbilisi. If you want to use the delivery service and receive the jersey at the desired address, please specify the mentioned address in detail. Delivery service is free." %}
+              </div>
+          </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingfive">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefive" aria-expanded="false" aria-controls="collapseThree">
+                {% trans "How soon will I receive my order?" %}
+            </button>
+        </h2>
+        <div id="collapsefive" class="accordion-collapse collapse" aria-labelledby="headingfive" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                {% trans "Your order can be delivered from the day of ordering. The maximum delivery time is two working days." %}
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingsix">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesix" aria-expanded="false" aria-controls="collapseThree">
+              {% trans "Can I return the Jersey?" %}
+          </button>
+      </h2>
+      <div id="collapsesix" class="accordion-collapse collapse" aria-labelledby="headingsix" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+              {% trans "You can return the jersey within two working days of receipt if you find any damage or if the size does not fit you. Contact us for a return." %}
+          </div>
+      </div>
+  </div>
+    </div>
+</div>
+
+
+</section>
+
+<section id="contact" class="mb-0  p-2 text-center">
+  <div class="container border p-4 ">
+    <div class="pb-4">
+      {% if request.LANGUAGE_CODE == 'en' %}
+          <h1>Contact</h1>
+      {% else %}
+      <h3>დაგვიკავშირდი</h3>
+      {% endif %}
+    </div> 
+      <div class="row row-cols-1 row-cols-lg-5 row-cols-md-2 row-cols-sm-2 justify-content-center" >                  
+          <!-- start features box item -->
+          <div class="col icon-with-text-style-09 md-mb-40px">
+              <div class="feature-box">
+                  <div class="feature-box-icon feature-box-icon-rounded dark-hover hover-box text-base-color w-90px h-90px rounded-circle mb-10px">
+                      <i class="bi bi-envelope icon-large"></i>
+                      <div class="feature-box-icon-hover bg-base-color rounded-circle"></div>
+                  </div>
+                  <div class="feature-box-content last-paragraph-no-margin">
+                      <span class="d-block fw-700 text-dark-gray mb-5px fs-18">{% trans "E-mail" %}</span>
+                      <div class="w-100 d-block">
+                          <a href="mailto:info@yourdomain.com" class="fs-16">hariha.jerseys@gmail.com</a><br>
+                    
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- end features box item -->
+          <!-- start features box item -->
+          <div class="col icon-with-text-style-09 xs-mb-40px">
+              <div class="feature-box">
+                  <div class="feature-box-icon feature-box-icon-rounded dark-hover hover-box text-base-color w-90px h-90px rounded-circle mb-10px">
+                      <i class="bi bi-telephone icon-large"></i>
+                      <div class="feature-box-icon-hover bg-base-color rounded-circle"></div>
+                  </div>
+                  <div class="feature-box-content last-paragraph-no-margin">
+                      <span class="d-block fw-700 text-dark-gray mb-5px fs-18">{% trans "Telephone" %}</span>
+                      <div class="w-100 d-block">
+                          <span class="d-block"><a href="tel:1800222000">574-99-48-48</a></span>
+                       
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- end features box item -->
+          <div class="col icon-with-text-style-09">
+              <div class="feature-box">
+                  <div class="feature-box-icon feature-box-icon-rounded dark-hover hover-box text-base-color w-90px h-90px rounded-circle mb-10px">
+                      <i class="bi bi-facebook icon-large"></i>
+                      <div class="feature-box-icon-hover bg-base-color rounded-circle"></div>
+                  </div>
+                  <div class="feature-box-content last-paragraph-no-margin">
+                      <span class="d-block fw-700 text-dark-gray mb-5px fs-18">Facebook</span>
+                      <a href="https://www.instagram.com/your_instagram_page/" target="_blank"></a>
+                      
+                  </div>
+              </div>
+          </div>
+          <div class="col icon-with-text-style-09">
+            <div class="feature-box">
+                <div class="feature-box-icon feature-box-icon-rounded dark-hover hover-box text-base-color w-90px h-90px rounded-circle mb-10px">
+                    <i class="bi bi-instagram icon-large pointer"></i>
+                    <div class="feature-box-icon-hover bg-base-color rounded-circle"></div>
+                </div>
+                <div class="feature-box-content last-paragraph-no-margin">
+                    <span class="d-block fw-700 text-dark-gray mb-5px fs-18">Instagram</span>
+                    <a href="https://www.instagram.com/your_instagram_page/" target="_blank"></a>
+                    
+                </div>
+            </div>
+        </div>
+      </div>
+
+  </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+$(document).ready(function() {
+    $('#products-section').on('click', '.page-link', function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        
+        $.ajax({
+            url: "{% url 'load_products' %}",
+            data: {
+                'page': page
+            },
+            
+            success: function(data) {
+              
+                $('#product-list-container').html(data);
+              
+            }
+        });
+    });
+});
+
+</script>
+  
+</section> 
+
+
 {% endblock %}

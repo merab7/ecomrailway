@@ -37,7 +37,8 @@ class Order(models.Model):
      total_paid_amount = models.DecimalField(max_digits=10, decimal_places=2)
      date = models.DateTimeField(auto_now_add=True)
      phone = models.CharField(max_length=200)
-     per_id = models.CharField(max_length=200, null=True)
+     cupon_used = models.CharField(max_length=200, default="Cupon code was not used", null=True)
+     payment_methode = models.CharField(max_length=200, null=True)
      shipped = models.BooleanField(default=False)
      shipped_date = models.DateTimeField(blank=True, null=True)
 
@@ -68,6 +69,15 @@ class Order_item(models.Model):
      def __str__(self) -> str:
         return f'Order Item -- {str(self.id)}'
 
+
+
+class CuponCode(models.Model):
+    code =  models.CharField(max_length=7, blank=False, null=False)
+    date_creted = models.DateTimeField(default=datetime.datetime.now, auto_created=True)
+    sale_percentage = models.IntegerField(default=0, blank=False)
+
+    def __str__(self) -> str:
+      return f'Order Item -- {str(self.code)}'
 
 
 

@@ -1,6 +1,63 @@
-{% autoescape off %} Hi {{ user.username }}, Please click on the link below to
-verify your email and complete the registration of your account:
-<!--  -->
-http://{{domain}}{% url 'activate' uidb64=uid token=token %} Thank you!
-<!--  -->
-{%endautoescape %}
+{% autoescape off %}
+<!DOCTYPE html>
+<html lang="{% if language_code == 'ka' %}ka{% else %}en{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if language_code == 'ka' %}თქვენი ელფოსტის დადასტურება{% else %}Email Verification{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        .link-container {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .link-container a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .link-container a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h1>{% if language_code == 'ka' %}გამარჯობა {{ user.username }}!{% else %}Hi {{ user.username }},{% endif %}</h1>
+    <p>{% if language_code == 'ka' %}გთხოვთ, დააჭირეთ ბმულს ქვევით, რომ დაადასტუროთ თქვენი ელ-ფოსტა:{% else %}Please click on the link below to verify your email and complete the registration of your account:{% endif %}</p>
+    <div class="link-container">
+        <a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}" target="_blank">
+            {% if language_code == 'ka' %}დააჭირეთ აქ{% else %}Click here{% endif %}
+        </a>
+    </div>
+    <p>{% if language_code == 'ka' %}გმადლობთ!{% else %}Thank you!{% endif %}</p>
+    <div class="footer">
+        &copy; {% now "Y" %} {% if language_code == 'ka' %}ყველა უფლება დაცულია.{% else %}All rights reserved.{% endif %}
+    </div>
+</body>
+</html>
+{% endautoescape %}
